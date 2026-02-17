@@ -255,3 +255,41 @@ th {
   min-width: 45px;
   text-align: center;
 }
+
+/* Section Actifs / Inactifs */
+.section-header td {
+  font-weight: 700;
+  text-align: left;
+  background: #f5f7fa;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.timers-table th:nth-child(2),
+.timers-table td:nth-child(2) {
+  width: auto;
+}
+
+/* Colonne Timer */
+.timers-table th:nth-child(3),
+.timers-table td:nth-child(3) {
+  width: 80px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.timer-display {
+  display: inline-block;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 15px;
+  margin-left: 6px;
+}
+
+/* Colonne Coords */
+.timers-table th:nth-child(4),
+.timers-table td:nth-child(4) {
+  width: 70px;
+  text-align: center;
+}
