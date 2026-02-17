@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ni_ti_1",
+    "name": "Catch of the Day (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132051, 84425, 115, Ale]"
+  },
+  {
+    "id": "ni_ti_2",
+    "name": "Clothes Shopping (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132331, 84062, 101, Cree]"
+  },
+  {
+    "id": "ni_ti_3",
+    "name": "Club Fight Challenge (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 131703, 83920, 101, Rocky]"
+  }
+  },
+  {
+    "id": "ni_ti_4",
+    "name": "Costume Shopping (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132271, 84022, 101, Letitia]"
+  }

@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Missions</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Missions</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<a href="index.html" class="back-button">⬅ Retour</a>
+  <div class="top-bar">
+    <div class="left">
+      <a href="index.html" class="back-btn">⬅ Retour</a>
+    </div>
 
-<h2 id="pageTitle"></h2>
+    <div class="center">
+      <span id="counter">0 / 0 sélectionnés</span>
+    </div>
 
-<div class="top-bar">
-  <div id="selectionCounter"></div>
+    <div class="right">
+      <label>
+        <input type="checkbox" id="showSelectedOnly">
+        Afficher la sélection
+      </label>
+    </div>
+  </div>
 
-  <label>
-    <input type="checkbox" id="filterSelected">
-    Afficher seulement sélectionnés
-  </label>
-</div>
+  <h2>🔥 Timers actifs</h2>
+  <div id="activeContainer"></div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Sél.</th>
-      <th>Nom Mission</th>
-      <th>Actif / Compteur</th>
-      <th>WP</th>
-    </tr>
-  </thead>
-  <tbody id="timersTable"></tbody>
-</table>
+  <h2>⏳ Timers inactifs</h2>
+  <div id="inactiveContainer"></div>
 
-<script src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
