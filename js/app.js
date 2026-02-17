@@ -9,28 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
-Comme ça :
-
-index.html → charge dashboard
-
-missions.html → charge timers
-
-aucun mélange
-
-🚀 Voici le app.js COMPLET (Dashboard + Timers)
-Remplace tout ton app.js par ceci :
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  if (document.getElementById("dashboard")) {
-    loadDashboard();
-  }
-
-  if (document.getElementById("timersTable")) {
-    loadMissions();
-  }
-
-});
 
 /* ===================================================== */
 /* ================= DASHBOARD ========================= */
@@ -84,6 +62,13 @@ function loadDashboard() {
 /* ===================================================== */
 /* ================= MISSIONS ========================== */
 /* ===================================================== */
+function formatTime(ms) {
+  const total = Math.floor(ms/1000);
+  const h = Math.floor(total/3600);
+  const m = Math.floor((total%3600)/60);
+  const s = total%60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
 
 function loadMissions() {
 
@@ -129,8 +114,26 @@ function loadMissions() {
 
       renderMissions(data, stored, storageKey, showSelectedOnly.checked);
 
+      // UPDATE TIMER DISPLAY ONLY
       setInterval(() => {
-        renderMissions(data, stored, storageKey, showSelectedOnly.checked);
+
+        const now = Date.now();
+
+        Object.keys(stored).forEach(id => {
+          const state = stored[id];
+
+          if (state.timerEnd && state.timerEnd > now) {
+
+            const remaining = state.timerEnd - now;
+            const el = document.querySelector(`[data-timer="${id}"]`);
+
+            if (el) {
+              el.textContent = formatTime(remaining);
+            }
+
+          }
+        });
+
       }, 1000);
 
     });
@@ -205,11 +208,18 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
       : "--:--:--";
 
     const col3 = document.createElement("td");
+
+    const remaining = isActive
+      ? formatTime(state.timerEnd - now)
+      : "--:--:--";
+
     col3.innerHTML = `
       <input type="checkbox"
         ${isActive ? "checked" : ""}
         onchange="toggleTimer('${m.id}',${m.durationHours},'${storageKey}')">
-      <span class="timer-display">${remaining}</span>
+      <span class="timer-display" data-timer="${m.id}">
+        ${remaining}
+      </span>
     `;
 
     const col4 = document.createElement("td");

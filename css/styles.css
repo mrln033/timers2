@@ -242,3 +242,22 @@ th {
   margin-left:8px;
   font-family:monospace;
 }
+
+.timers-table {
+  width: 100%;
+  table-layout: fixed; /* IMPORTANT */
+}
+
+.col-select {
+  width: 45px;
+  max-width: 45px;
+  min-width: 45px;
+  text-align: center;
+}
+
+.timers-table td:first-child {
+  width: 45px;
+  max-width: 45px;
+  min-width: 45px;
+  text-align: center;
+}
