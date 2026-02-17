@@ -2,43 +2,80 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDashboard();
 });
 
-function loadDashboard() {
+async function loadDashboard() {
 
-  fetch("data/dashboard.json")
-    .then(r => r.json())
-    .then(planets => {
+  const container = document.getElementById("dashboard");
 
-      const container = document.getElementById("dashboard");
+  try {
+    const [planetsRes, filesRes] = await Promise.all([
+      fetch("data/dashboard.json"),
+      fetch("data/files.json")
+    ]);
 
-      planets.forEach(planet => {
+    const planets = await planetsRes.json();
+    const files = await filesRes.json();
 
-        const card = document.createElement("div");
-        card.className = "planet-card";
+    planets.forEach(planet => {
 
-        const title = document.createElement("div");
-        title.className = "planet-title";
-        title.innerHTML = `${planet.icon} ${planet.title}`;
+      const card = document.createElement("div");
+      card.className = "planet-card";
 
-        card.appendChild(title);
+      const title = document.createElement("div");
+      title.className = "planet-title";
+      title.innerHTML = `${planet.icon} ${planet.title}`;
+      card.appendChild(title);
 
-        planet.categories.forEach(cat => {
+      // filtrer les fichiers correspondant à la planète
+      const planetFiles = files.filter(f =>
+        f.startsWith(`timers_${planet.planet}_`)
+      );
 
-          const storageKey = `timers_${planet.planet}_${cat}`;
-          const activeCount = countActiveTimers(storageKey);
+      let totalActivePlanet = 0;
 
-          const btn = document.createElement("a");
-          btn.className = "category-button";
-          btn.href = `missions.html?planet=${planet.planet}&category=${cat}`;
+      planetFiles.forEach(file => {
 
-          btn.innerHTML = `
-            ${cat}
-            ${activeCount ? `<span class="badge-active">${activeCount}</span>` : ""}
-          `;
+        // extraire la catégorie depuis le nom
+        const parts = file
+          .replace(".json","")
+          .split("_");
 
-          card.appendChild(btn);
-        });
+        const category = parts.slice(2).join("_");
 
-        container.appendChild(card);
+        const storageKey =
+          file.replace(".json","");
+
+        const activeCount =
+          countActiveTimers(storageKey);
+
+        totalActivePlanet += activeCount;
+
+        const btn = document.createElement("a");
+        btn.className = "category-button";
+        btn.href =
+          `missions.html?planet=${planet.planet}&category=${category}`;
+
+        btn.innerHTML = `
+          ${category}
+          ${activeCount
+            ? `<span class="badge-active">${activeCount}</span>`
+            : ""}
+        `;
+
+        card.appendChild(btn);
       });
+
+      // Badge global planète
+      if (totalActivePlanet > 0) {
+        const badge = document.createElement("span");
+        badge.className = "planet-badge";
+        badge.textContent = totalActivePlanet;
+        title.appendChild(badge);
+      }
+
+      container.appendChild(card);
     });
+
+  } catch (err) {
+    console.error("Erreur dashboard :", err);
+  }
 }
