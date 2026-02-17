@@ -203,10 +203,6 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
       ${isActive ? `<span class="badge-active">Actif</span>` : ""}
     `;
 
-    const remaining = isActive
-      ? formatTime(state.timerEnd - now)
-      : "--:--:--";
-
     const col3 = document.createElement("td");
 
     const remaining = isActive
@@ -221,7 +217,7 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
         ${remaining}
       </span>
     `;
-
+	
     const col4 = document.createElement("td");
     col4.innerHTML = `
       <button onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
