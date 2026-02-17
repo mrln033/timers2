@@ -67,19 +67,45 @@ function render(data, storageKey, showSelected=false) {
   const active = [];
   const inactive = [];
 
+  /* ================= CLASSIFICATION ================= */
+
   data.forEach(m => {
 
     const state = stored[m.id];
-
-    if (showSelected && !state.selected) return;
+    const isActive = state.timerEnd && state.timerEnd > now;
 
     if (state.selected) selectedCount++;
 
-    if (state.timerEnd && state.timerEnd > now)
+    if (isActive) {
       active.push(m);
-    else
+    } else {
+
+      // Le filtre ne s'applique QUE sur les inactifs
+      if (showSelected && !state.selected) return;
+
       inactive.push(m);
+    }
   });
+
+  /* ================= TRI ================= */
+
+  // Actifs → alphabétique uniquement
+  active.sort((a,b)=>
+    a.name.localeCompare(b.name,'fr',{sensitivity:'base'})
+  );
+
+  // Inactifs → sélection d'abord, puis alphabétique
+  inactive.sort((a,b)=>{
+
+    const selA = stored[a.id].selected;
+    const selB = stored[b.id].selected;
+
+    if (selA !== selB) return selB - selA;
+
+    return a.name.localeCompare(b.name,'fr',{sensitivity:'base'});
+  });
+
+  /* ================= RENDER SECTION ================= */
 
   function section(title) {
     const row = document.createElement("tr");
@@ -104,7 +130,7 @@ function render(data, storageKey, showSelected=false) {
     col1.innerHTML = `
       <input type="checkbox"
         ${state.selected ? "checked" : ""}
-        onchange="toggleSelected('${storageKey}','${m.id}')">
+        onchange="handleSelectedChange('${storageKey}','${m.id}')">
     `;
 
     /* COL 2 */
@@ -124,7 +150,7 @@ function render(data, storageKey, showSelected=false) {
     col3.innerHTML = `
       <input type="checkbox"
         ${isActive ? "checked" : ""}
-        onchange="toggleTimerState('${storageKey}','${m.id}',${m.durationHours})">
+        onchange="handleTimerToggle('${storageKey}','${m.id}',${m.durationHours})">
       <span class="timer-display" data-timer="${m.id}">
         ${remaining}
       </span>
@@ -133,8 +159,9 @@ function render(data, storageKey, showSelected=false) {
     /* COL 4 */
     const col4 = document.createElement("td");
     col4.innerHTML = `
-      <button onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
-        Copier
+      <button class="copy-btn"
+        onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
+        Copier WP
       </button>
     `;
 
@@ -147,19 +174,18 @@ function render(data, storageKey, showSelected=false) {
   }
 
   if (active.length) {
-    table.appendChild(section("🔥 Timers actifs"));
+    table.appendChild(section("Timers Actifs"));
     active.forEach(m => table.appendChild(rowMission(m)));
   }
 
   if (inactive.length) {
-    table.appendChild(section("⏳ Timers inactifs"));
+    table.appendChild(section("Timers Inactifs"));
     inactive.forEach(m => table.appendChild(rowMission(m)));
   }
 
   document.getElementById("counter").textContent =
     `${selectedCount} / ${data.length}`;
 }
-
 /* ================= TIMER UPDATE ================= */
 
 function updateTimers(storageKey) {
@@ -181,4 +207,35 @@ function updateTimers(storageKey) {
     }
 
   });
+}
+
+/* ================= DYNAMIC ACTIONS ================= */
+
+function handleSelectedChange(storageKey, id) {
+
+  toggleSelected(storageKey, id);
+
+  refreshView(storageKey);
+}
+
+function handleTimerToggle(storageKey, id, durationHours) {
+
+  toggleTimerState(storageKey, id, durationHours);
+
+  refreshView(storageKey);
+}
+
+function refreshView(storageKey) {
+
+  const params = new URLSearchParams(window.location.search);
+  const planet = params.get("planet");
+  const category = params.get("category");
+  const showSelected =
+    document.getElementById("showSelectedOnly")?.checked || false;
+
+  fetch(`data/timers_${planet}_${category}.json`)
+    .then(r=>r.json())
+    .then(data=>{
+      render(data, storageKey, showSelected);
+    });
 }
