@@ -120,13 +120,13 @@ function loadMissions() {
 
 function renderMissions(data, stored, storageKey, showSelected=false) {
 
-  const activeTable = document.getElementById("activeTable");
-  const inactiveTable = document.getElementById("inactiveTable");
-
-  activeTable.innerHTML = "";
-  inactiveTable.innerHTML = "";
+  const tableBody = document.getElementById("timersTable");
+  tableBody.innerHTML = "";
 
   let selectedCount = 0;
+
+  const activeMissions = [];
+  const inactiveMissions = [];
 
   data.forEach(mission => {
 
@@ -136,18 +136,39 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
 
     if (state.selected) selectedCount++;
 
-    const row = document.createElement("tr");
+    if (state.isActive)
+      activeMissions.push(mission);
+    else
+      inactiveMissions.push(mission);
+  });
 
+  function createSectionRow(title) {
+    const row = document.createElement("tr");
+    row.className = "section-header";
+
+    const cell = document.createElement("td");
+    cell.colSpan = 4;
+    cell.textContent = title;
+
+    row.appendChild(cell);
+    return row;
+  }
+
+  function createMissionRow(mission) {
+
+    const state = stored[mission.id];
+
+    const row = document.createElement("tr");
     if (state.isActive) row.classList.add("active-row");
 
-    // === COL 1 : Sélection ===
+    // Sélection
     const selCell = document.createElement("td");
     selCell.innerHTML = `
       <input type="checkbox" ${state.selected ? "checked" : ""}
         onchange="toggleSelect('${mission.id}','${storageKey}')">
     `;
 
-    // === COL 2 : Nom mission + info ===
+    // Nom
     const nameCell = document.createElement("td");
     nameCell.style.textAlign = "left";
 
@@ -165,7 +186,7 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
       nameCell.textContent = mission.name;
     }
 
-    // === COL 3 : Actif / Compteur ===
+    // Actif / compteur
     const controlCell = document.createElement("td");
     controlCell.className = "control-cell";
 
@@ -180,9 +201,8 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
       </div>
     `;
 
-    // === COL 4 : WP ===
+    // WP
     const wpCell = document.createElement("td");
-
     if (mission.wp) {
       wpCell.innerHTML = `
         <button onclick="navigator.clipboard.writeText('${mission.wp}')">
@@ -196,11 +216,24 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
     row.appendChild(controlCell);
     row.appendChild(wpCell);
 
-    if (state.isActive)
-      activeTable.appendChild(row);
-    else
-      inactiveTable.appendChild(row);
-  });
+    return row;
+  }
+
+  // === Actifs ===
+  if (activeMissions.length > 0) {
+    tableBody.appendChild(createSectionRow("🔥 Timers actifs"));
+    activeMissions.forEach(m =>
+      tableBody.appendChild(createMissionRow(m))
+    );
+  }
+
+  // === Inactifs ===
+  if (inactiveMissions.length > 0) {
+    tableBody.appendChild(createSectionRow("⏳ Timers inactifs"));
+    inactiveMissions.forEach(m =>
+      tableBody.appendChild(createMissionRow(m))
+    );
+  }
 
   document.getElementById("counter").textContent =
     `${selectedCount} / ${data.length}`;
