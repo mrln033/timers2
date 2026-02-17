@@ -88,7 +88,7 @@ function loadMissions() {
   const planet = params.get("planet");
   const category = params.get("category");
 
-  const file = `timers_${planet}_${category}.json`;
+  const file = `data/timers_${planet}_${category}.json`;
   const storageKey = `timers_${planet}_${category}`;
 
   fetch(file)
