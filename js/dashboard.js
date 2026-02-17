@@ -12,8 +12,13 @@ async function loadDashboard() {
       fetch("data/files.json")
     ]);
 
-    const planets = await planetsRes.json();
-    const files = await filesRes.json();
+let planets = await planetsRes.json();
+const files = await filesRes.json();
+
+/* 🔹 TRI ALPHABÉTIQUE DES PLANÈTES */
+planets.sort((a, b) =>
+  a.title.localeCompare(b.title, "fr", { sensitivity: "base" })
+);
 
     planets.forEach(planet => {
 
@@ -26,10 +31,14 @@ async function loadDashboard() {
       card.appendChild(title);
 
       // filtrer les fichiers correspondant à la planète
-      const planetFiles = files.filter(f =>
-        f.startsWith(`timers_${planet.planet}_`)
-      );
-
+let planetFiles = files
+  .filter(f => f.startsWith(`timers_${planet.planet}_`))
+  .sort((a, b) => {
+    const catA = a.replace(".json","").split("_").slice(2).join("_");
+    const catB = b.replace(".json","").split("_").slice(2).join("_");
+    return catA.localeCompare(catB, "fr", { sensitivity: "base" });
+  })
+  
       let totalActivePlanet = 0;
 
       planetFiles.forEach(file => {
