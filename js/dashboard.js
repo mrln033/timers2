@@ -53,8 +53,8 @@ let planetFiles = files
         const storageKey =
           file.replace(".json","");
 
-        const activeCount =
-          countActiveTimers(storageKey);
+        const activeCount = countActiveTimers(storageKey);
+        const selectedCount = countSelectedTimers(storageKey);
 
         totalActivePlanet += activeCount;
 
@@ -63,13 +63,11 @@ let planetFiles = files
         btn.href =
           `missions.html?planet=${planet.planet}&category=${category}`;
 
-        btn.innerHTML = `
-          ${category.charAt(0).toUpperCase() + category.slice(1)}
-          ${activeCount
-            ? `<span class="badge-active">${activeCount}</span>`
-            : ""}
-        `;
-
+btn.innerHTML = `
+  ${category.charAt(0).toUpperCase() + category.slice(1)}
+  ${activeCount ? `<span class="badge-active">${activeCount}</span>` : ""}
+  ${selectedCount ? `<span class="badge-selected">${selectedCount}</span>` : ""}
+`;
         card.appendChild(btn);
       });
 

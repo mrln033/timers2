@@ -52,3 +52,11 @@ function countActiveTimers(storageKey) {
   return Object.values(stored)
     .filter(m => m.timerEnd && m.timerEnd > now).length;
 }
+
+function countSelectedTimers(storageKey) {
+  const stored = getStorage(storageKey);
+
+  return Object.values(stored)
+    .filter(m => m.selected === true).length;
+}
+
