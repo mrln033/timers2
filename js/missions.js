@@ -20,6 +20,20 @@ function loadMissions() {
   const planet = params.get("planet");
   const category = params.get("category");
 
+const pageTitle = document.getElementById("pageTitle");
+
+if (pageTitle) {
+
+  const formattedPlanet =
+    planet.charAt(0).toUpperCase() + planet.slice(1);
+
+  const formattedCategory =
+    category.charAt(0).toUpperCase() + category.slice(1);
+
+  pageTitle.textContent =
+    `-= ${formattedPlanet} - ${formattedCategory} =-`;
+}
+
   if (!planet || !category) return;
 
   const storageKey = `timers_${planet}_${category}`;

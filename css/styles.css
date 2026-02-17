@@ -9,6 +9,13 @@ body {
   padding: 0;
 }
 
+#pageTitle {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
 .page-container {
   max-width: 950px;
   margin: 30px auto;
@@ -172,9 +179,8 @@ body {
 .timers-table th:nth-child(2),
 .timers-table td:nth-child(2) {
   width: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;        /* 🔥 autorise retour ligne */
+  word-break: break-word;     /* coupe proprement si très long mot */
 }
 
 /* Timer */
