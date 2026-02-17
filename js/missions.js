@@ -160,7 +160,7 @@ function render(data, storageKey, showSelected=false) {
     const col4 = document.createElement("td");
     col4.innerHTML = `
       <button class="copy-btn"
-        onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
+        onclick="handleCopy(this, \`${m.coords}\`)">
         Copier WP
       </button>
     `;
@@ -238,4 +238,24 @@ function refreshView(storageKey) {
     .then(data=>{
       render(data, storageKey, showSelected);
     });
+}
+
+function handleCopy(button, text) {
+
+  navigator.clipboard.writeText(text).then(() => {
+
+    const originalText = button.textContent;
+
+    button.textContent = "Copié !";
+    button.classList.add("copied");
+
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.classList.remove("copied");
+    }, 1200);
+
+  }).catch(() => {
+    button.textContent = "Erreur";
+  });
+
 }
