@@ -1,0 +1,20 @@
+[
+  {
+    "planet": "calypso",
+    "category": "hunting",
+    "title": "Calypso - Hunting",
+    "icon": "🎯"
+  },
+  {
+    "planet": "calypso",
+    "category": "mining",
+    "title": "Calypso - Mining",
+    "icon": "⛏️"
+  },
+  {
+    "planet": "calypso",
+    "category": "crafting",
+    "title": "Calypso - Crafting",
+    "icon": "🛠️"
+  }
+]

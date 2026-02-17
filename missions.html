@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Missions</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a href="index.html" class="back-button">⬅ Retour</a>
+
+<h2 id="pageTitle"></h2>
+
+<div class="top-bar">
+  <div id="selectionCounter"></div>
+
+  <label>
+    <input type="checkbox" id="filterSelected">
+    Afficher seulement sélectionnés
+  </label>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sél.</th>
+      <th>Nom Mission</th>
+      <th>Actif / Compteur</th>
+      <th>WP</th>
+    </tr>
+  </thead>
+  <tbody id="timersTable"></tbody>
+</table>
+
+<script src="js/app.js"></script>
+</body>
+</html>
