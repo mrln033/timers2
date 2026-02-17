@@ -64,14 +64,6 @@ async function loadDashboard() {
         card.appendChild(btn);
       });
 
-      // Badge global planète
-      if (totalActivePlanet > 0) {
-        const badge = document.createElement("span");
-        badge.className = "planet-badge";
-        badge.textContent = totalActivePlanet;
-        title.appendChild(badge);
-      }
-
       container.appendChild(card);
     });
 
