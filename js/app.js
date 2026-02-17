@@ -3,10 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDashboard();
   }
 
-  if (document.getElementById("activeContainer")) {
+  if (document.getElementById("timersTable")) {
     loadMissions();
   }
 });
+
+/* ===================================================== */
+/* ================= DASHBOARD ========================= */
+/* ===================================================== */
 
 function extractCategory(filename) {
   const parts = filename.replace("timers_", "").replace(".json", "").split("_");
@@ -29,226 +33,9 @@ function loadDashboard() {
     planets.forEach(planet => {
 
       const card = document.createElement("div");
-      card.className = "planet-card";
+      card.className = "planet-card card";
 
       let totalActivePlanet = 0;
 
-      const title = document.createElement("h2");
-      title.innerHTML = `${planet.icon} ${planet.title}`;
-      card.appendChild(title);
-
-      const catContainer = document.createElement("div");
-      catContainer.className = "category-container";
-
-      files.forEach(file => {
-        const info = extractCategory(file);
-
-        if (info.planet === planet.planet) {
-
-          const storageKey = `timers_${info.planet}_${info.category}`;
-          const stored = JSON.parse(localStorage.getItem(storageKey)) || {};
-          const activeCount = Object.values(stored)
-            .filter(t => t.isActive).length;
-
-          totalActivePlanet += activeCount;
-
-          const btn = document.createElement("a");
-          btn.className = "category-button";
-          btn.href = `missions.html?planet=${info.planet}&category=${info.category}`;
-
-          btn.innerHTML = `${info.category}`;
-
-          if (activeCount > 0) {
-            const badge = document.createElement("span");
-            badge.className = "badge";
-            badge.textContent = activeCount;
-            btn.appendChild(badge);
-          }
-
-          catContainer.appendChild(btn);
-        }
-      });
-
-      if (totalActivePlanet > 0) {
-        const counter = document.createElement("span");
-        counter.className = "planet-counter";
-        counter.textContent = `${totalActivePlanet} actifs`;
-        title.appendChild(counter);
-      }
-
-      card.appendChild(catContainer);
-      container.appendChild(card);
-    });
-  });
-}
-
-function loadMissions() {
-
-  const params = new URLSearchParams(window.location.search);
-  const planet = params.get("planet");
-  const category = params.get("category");
-
-  const file = `data/timers_${planet}_${category}.json`;
-  const storageKey = `timers_${planet}_${category}`;
-
-  fetch(file)
-    .then(r => r.json())
-    .then(data => {
-
-      let stored = JSON.parse(localStorage.getItem(storageKey)) || {};
-
-      data.sort((a,b)=>
-        a.name.localeCompare(b.name,'fr',{sensitivity:'base'})
-      );
-
-      data.forEach(mission => {
-        if (!stored[mission.id]) {
-          stored[mission.id] = { isActive:false, selected:false };
-        }
-      });
-
-      localStorage.setItem(storageKey, JSON.stringify(stored));
-
-      renderMissions(data, stored, storageKey);
-
-      document.getElementById("showSelectedOnly")
-        .addEventListener("change", e => {
-          renderMissions(data, stored, storageKey, e.target.checked);
-        });
-    });
-}
-
-function renderMissions(data, stored, storageKey, showSelected=false) {
-
-  const tableBody = document.getElementById("timersTable");
-  tableBody.innerHTML = "";
-
-  let selectedCount = 0;
-
-  const activeMissions = [];
-  const inactiveMissions = [];
-
-  data.forEach(mission => {
-
-    const state = stored[mission.id];
-
-    if (showSelected && !state.selected) return;
-
-    if (state.selected) selectedCount++;
-
-    if (state.isActive)
-      activeMissions.push(mission);
-    else
-      inactiveMissions.push(mission);
-  });
-
-  function createSectionRow(title) {
-    const row = document.createElement("tr");
-    row.className = "section-header";
-
-    const cell = document.createElement("td");
-    cell.colSpan = 4;
-    cell.textContent = title;
-
-    row.appendChild(cell);
-    return row;
-  }
-
-  function createMissionRow(mission) {
-
-    const state = stored[mission.id];
-
-    const row = document.createElement("tr");
-    if (state.isActive) row.classList.add("active-row");
-
-    // Sélection
-    const selCell = document.createElement("td");
-    selCell.innerHTML = `
-      <input type="checkbox" ${state.selected ? "checked" : ""}
-        onchange="toggleSelect('${mission.id}','${storageKey}')">
-    `;
-
-    // Nom
-    const nameCell = document.createElement("td");
-    nameCell.style.textAlign = "left";
-
-    if (mission.info) {
-      nameCell.innerHTML = `
-        <span class="name-wrapper">
-          ${mission.name}
-          <span class="info-icon">
-            ℹ
-            <span class="info-tooltip">${mission.info}</span>
-          </span>
-        </span>
-      `;
-    } else {
-      nameCell.textContent = mission.name;
-    }
-
-    // Actif / compteur
-    const controlCell = document.createElement("td");
-    controlCell.className = "control-cell";
-
-    controlCell.innerHTML = `
-      <div class="control-wrapper">
-        <button onclick="toggleActive('${mission.id}','${storageKey}')">
-          ${state.isActive ? "Stop" : "Start"}
-        </button>
-        <span class="counter">
-          ${state.count || 0}
-        </span>
-      </div>
-    `;
-
-    // WP
-    const wpCell = document.createElement("td");
-    if (mission.wp) {
-      wpCell.innerHTML = `
-        <button onclick="navigator.clipboard.writeText('${mission.wp}')">
-          Copier
-        </button>
-      `;
-    }
-
-    row.appendChild(selCell);
-    row.appendChild(nameCell);
-    row.appendChild(controlCell);
-    row.appendChild(wpCell);
-
-    return row;
-  }
-
-  // === Actifs ===
-  if (activeMissions.length > 0) {
-    tableBody.appendChild(createSectionRow("🔥 Timers actifs"));
-    activeMissions.forEach(m =>
-      tableBody.appendChild(createMissionRow(m))
-    );
-  }
-
-  // === Inactifs ===
-  if (inactiveMissions.length > 0) {
-    tableBody.appendChild(createSectionRow("⏳ Timers inactifs"));
-    inactiveMissions.forEach(m =>
-      tableBody.appendChild(createMissionRow(m))
-    );
-  }
-
-  document.getElementById("counter").textContent =
-    `${selectedCount} / ${data.length}`;
-}
-
-function toggleSelect(id, storageKey) {
-  const stored = JSON.parse(localStorage.getItem(storageKey));
-  stored[id].selected = !stored[id].selected;
-  localStorage.setItem(storageKey, JSON.stringify(stored));
-  location.reload();
-}
-
-function toggleActive(id, storageKey) {
-  const stored = JSON.parse(localStorage.getItem(storageKey));
-  stored[id].isActive = !stored[id].isActive;
-  localStorage.setItem(storageKey, JSON.stringify(stored));
-  location.reload();
-}
+      const header = document.createElement("div");
+      header.classNa
