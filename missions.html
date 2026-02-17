@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Missions</title>
-  <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8">
+<title>Missions</title>
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <div class="page-container">
 
+  <h2 id="pageTitle"></h2>
+
   <div class="top-bar">
     <a href="index.html" class="back-button">⬅ Retour</a>
 
     <div class="selection-counter">
-      <span id="counter" class="selection-badge">0 / 0</span>
+      <span id="counter" class="selection-badge"></span>
     </div>
 
     <label class="filter-label">
       <input type="checkbox" id="showSelectedOnly">
-      Afficher la sélection
+      Afficher seulement sélectionnés
     </label>
   </div>
 
   <div class="card">
+
     <div class="section-title">🔥 Timers actifs</div>
-    <div id="activeContainer"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Sél.</th>
+          <th>Nom Mission</th>
+          <th>Actif / Compteur</th>
+          <th>WP à copier</th>
+        </tr>
+      </thead>
+      <tbody id="activeTable"></tbody>
+    </table>
 
     <div class="section-title">⏳ Timers inactifs</div>
-    <div id="inactiveContainer"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Sél.</th>
+          <th>Nom Mission</th>
+          <th>Actif / Compteur</th>
+          <th>WP à copier</th>
+        </tr>
+      </thead>
+      <tbody id="inactiveTable"></tbody>
+    </table>
+
   </div>
 
 </div>
 
-  <script src="js/app.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
