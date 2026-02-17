@@ -16,19 +16,24 @@ body {
 }
 
 /* ============================= */
-/* ========= CARD STYLE ======== */
+/* ========= CARD ============== */
 /* ============================= */
 
-.card {
+.card,
+.planet-card {
   background: white;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin-bottom: 25px;
   transition: transform 0.2s ease;
 }
 
-.card:hover {
+.card {
+  margin-bottom: 25px;
+}
+
+.card:hover,
+.planet-card:hover {
   transform: translateY(-3px);
 }
 
@@ -84,64 +89,18 @@ body {
 }
 
 /* ============================= */
-/* ========= TABLE ============= */
-/* ============================= */
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  table-layout: fixed;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background: #f0f0f0;
-}
-
-.active-row {
-  background-color: #e8f5e9;
-}
-
-.section-title {
-  margin: 30px 0 10px 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-/* ============================= */
-/* ===== DASHBOARD PAGE ======= */
+/* ===== DASHBOARD GRID ======== */
 /* ============================= */
 
 .dashboard-grid {
   display: grid;
   gap: 24px;
-
-  /* Colonnes automatiques */
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-
   max-width: 1100px;
   margin: 0 auto 40px auto;
   padding: 0 20px;
 }
 
-/* Tuile planète */
-.planet-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease;
-}
-
-.planet-card:hover {
-  transform: translateY(-4px);
-}
-
-/* Nom planète centré */
 .planet-title {
   text-align: center;
   font-size: 20px;
@@ -151,7 +110,6 @@ th {
   padding-bottom: 8px;
 }
 
-/* Boutons catégories */
 .category-button {
   display: flex;
   align-items: center;
@@ -172,88 +130,81 @@ th {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Badge actif */
-.badge-active {
-  background-color: #4caf50;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-}
-
 /* ============================= */
-/* ===== INFO TOOLTIP ========= */
+/* ===== TIMERS TABLE ========== */
 /* ============================= */
 
-.name-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.timers-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
-.info-icon {
-  position: relative;
-  cursor: pointer;
-  font-size: 14px;
-  color: #2196f3;
-  opacity: 0.7;
+.timers-table th,
+.timers-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-.info-tooltip {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  position: absolute;
-  bottom: 130%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #222;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  white-space: nowrap;
-  font-size: 13px;
-  z-index: 1000;
-  pointer-events: none;
+.timers-table th {
+  background: #f0f0f0;
 }
 
-.info-icon:hover .info-tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-
-.badge-active{
-  margin-left:8px;
-  background:#2ecc71;
-  color:white;
-  padding:2px 6px;
-  border-radius:8px;
-  font-size:11px;
-  font-weight:600;
-}
-
-.timer-display{
-  margin-left:8px;
-  font-family:monospace;
-}
-
-.col-select {
-  width: 45px;
-  max-width: 45px;
-  min-width: 45px;
-  text-align: center;
-}
-
-
-/* Section Actifs / Inactifs */
+/* Section headers */
 .section-header td {
   font-weight: 700;
-  text-align: left !important;
+  text-align: left;
   background: #f5f7fa;
   padding: 10px 12px;
   font-size: 15px;
 }
 
+/* Colonnes */
+
+/* Sélection */
+.timers-table th:nth-child(1),
+.timers-table td:nth-child(1) {
+  width: 60px;
+  text-align: center;
+}
+
+/* Mission */
+.timers-table th:nth-child(2),
+.timers-table td:nth-child(2) {
+  width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Timer */
+.timers-table th:nth-child(3),
+.timers-table td:nth-child(3) {
+  width: 80px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* Copier WP */
+.timers-table th:nth-child(4),
+.timers-table td:nth-child(4) {
+  width: 110px;
+  text-align: center;
+}
+
+/* Badge actif */
+.badge-active {
+  margin-left: 8px;
+  background: #2ecc71;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Timer display */
 .timer-display {
   display: inline-block;
   font-family: monospace;
@@ -262,7 +213,7 @@ th {
   margin-left: 6px;
 }
 
-/* Bouton Copier */
+/* Copier button */
 .copy-btn {
   width: 100px;
   height: 30px;
@@ -281,37 +232,3 @@ th {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
-
-/* Colonne 1 */
-.timers-table th:nth-child(1),
-.timers-table td:nth-child(1) {
-  width: 60px;
-  text-align: center;
-}
-
-/* Colonne 2 (dynamique) */
-.timers-table th:nth-child(2),
-.timers-table td:nth-child(2) {
-  width: auto;
-}
-
-/* Colonne 3 (timer) */
-.timers-table th:nth-child(3),
-.timers-table td:nth-child(3) {
-  width: 80px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 15px;
-}
-
-/* Colonne 4 (copier WP) */
-.timers-table th:nth-child(4),
-.timers-table td:nth-child(4) {
-  width: 110px;
-  text-align: center;
-}
-
-.timers-table td:nth-child(2) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
