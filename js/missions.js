@@ -1,3 +1,5 @@
+let missionsData = [];
+
 document.addEventListener("DOMContentLoaded", () => {
   loadMissions();
 });
@@ -42,11 +44,9 @@ if (pageTitle) {
 
   fetch(file)
     .then(r => r.json())
-    .then(data => {
+.then(data => {
 
-      data.sort((a,b)=>
-        a.name.localeCompare(b.name,'fr',{sensitivity:'base'})
-      );
+  missionsData = data;
 
       const stored = initMissionStorage(storageKey, data);
 
@@ -241,17 +241,10 @@ function handleTimerToggle(storageKey, id, durationHours) {
 
 function refreshView(storageKey) {
 
-  const params = new URLSearchParams(window.location.search);
-  const planet = params.get("planet");
-  const category = params.get("category");
   const showSelected =
     document.getElementById("showSelectedOnly")?.checked || false;
 
-  fetch(`data/timers_${planet}_${category}.json`)
-    .then(r=>r.json())
-    .then(data=>{
-      render(data, storageKey, showSelected);
-    });
+  render(missionsData, storageKey, showSelected);
 }
 
 function handleCopy(button, text) {
