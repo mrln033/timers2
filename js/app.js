@@ -1,10 +1,89 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  if (document.getElementById("dashboard")) {
+    loadDashboard();
+  }
+
   if (document.getElementById("timersTable")) {
     loadMissions();
   }
+
+});
+Comme ça :
+
+index.html → charge dashboard
+
+missions.html → charge timers
+
+aucun mélange
+
+🚀 Voici le app.js COMPLET (Dashboard + Timers)
+Remplace tout ton app.js par ceci :
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (document.getElementById("dashboard")) {
+    loadDashboard();
+  }
+
+  if (document.getElementById("timersTable")) {
+    loadMissions();
+  }
+
 });
 
-/* ================= LOAD ================= */
+/* ===================================================== */
+/* ================= DASHBOARD ========================= */
+/* ===================================================== */
+
+function loadDashboard() {
+
+  fetch("data/dashboard.json")
+    .then(r => r.json())
+    .then(planets => {
+
+      const container = document.getElementById("dashboard");
+
+      planets.forEach(planet => {
+
+        const card = document.createElement("div");
+        card.className = "planet-card";
+
+        const title = document.createElement("div");
+        title.className = "planet-title";
+        title.innerHTML = `${planet.icon} ${planet.title}`;
+
+        card.appendChild(title);
+
+        planet.categories.forEach(cat => {
+
+          const storageKey = `timers_${planet.planet}_${cat}`;
+          const stored = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+          const now = Date.now();
+          const activeCount = Object.values(stored)
+            .filter(m => m.timerEnd && m.timerEnd > now).length;
+
+          const btn = document.createElement("a");
+          btn.className = "category-button";
+          btn.href = `missions.html?planet=${planet.planet}&category=${cat}`;
+
+          btn.innerHTML = `
+            ${cat}
+            ${activeCount ? `<span class="badge-active">${activeCount}</span>` : ""}
+          `;
+
+          card.appendChild(btn);
+        });
+
+        container.appendChild(card);
+      });
+    });
+}
+
+/* ===================================================== */
+/* ================= MISSIONS ========================== */
+/* ===================================================== */
 
 function loadMissions() {
 
@@ -39,38 +118,34 @@ function loadMissions() {
 
       localStorage.setItem(storageKey, JSON.stringify(stored));
 
-      // restore topbar checkbox
       const showSelectedOnly = document.getElementById("showSelectedOnly");
-      const savedTopbar = localStorage.getItem(topbarKey);
-      if (savedTopbar === "true") showSelectedOnly.checked = true;
+      const saved = localStorage.getItem(topbarKey);
+      if (saved === "true") showSelectedOnly.checked = true;
 
       showSelectedOnly.addEventListener("change", e => {
         localStorage.setItem(topbarKey, e.target.checked);
-        render(data, stored, storageKey, e.target.checked);
+        renderMissions(data, stored, storageKey, e.target.checked);
       });
 
-      render(data, stored, storageKey, showSelectedOnly.checked);
+      renderMissions(data, stored, storageKey, showSelectedOnly.checked);
 
       setInterval(() => {
-        render(data, stored, storageKey, showSelectedOnly.checked);
+        renderMissions(data, stored, storageKey, showSelectedOnly.checked);
       }, 1000);
 
     });
 }
 
-/* ================= RENDER ================= */
-
-function render(data, stored, storageKey, showSelected=false) {
+function renderMissions(data, stored, storageKey, showSelected=false) {
 
   const table = document.getElementById("timersTable");
   table.innerHTML = "";
 
+  const now = Date.now();
   let selectedCount = 0;
 
   const active = [];
   const inactive = [];
-
-  const now = Date.now();
 
   data.forEach(m => {
 
@@ -97,10 +172,10 @@ function render(data, stored, storageKey, showSelected=false) {
   }
 
   function formatTime(ms) {
-    const totalSec = Math.floor(ms/1000);
-    const h = Math.floor(totalSec/3600);
-    const m = Math.floor((totalSec%3600)/60);
-    const s = totalSec%60;
+    const total = Math.floor(ms/1000);
+    const h = Math.floor(total/3600);
+    const m = Math.floor((total%3600)/60);
+    const s = total%60;
     return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
   }
 
@@ -109,10 +184,8 @@ function render(data, stored, storageKey, showSelected=false) {
     const state = stored[m.id];
     const row = document.createElement("tr");
 
-    const now = Date.now();
     const isActive = state.timerEnd && state.timerEnd > now;
 
-    /* COL 1 */
     const col1 = document.createElement("td");
     col1.style.width = "45px";
     col1.innerHTML = `
@@ -120,7 +193,6 @@ function render(data, stored, storageKey, showSelected=false) {
         onchange="toggleSelect('${m.id}','${storageKey}')">
     `;
 
-    /* COL 2 */
     const col2 = document.createElement("td");
     col2.style.textAlign = "left";
     col2.innerHTML = `
@@ -128,13 +200,11 @@ function render(data, stored, storageKey, showSelected=false) {
       ${isActive ? `<span class="badge-active">Actif</span>` : ""}
     `;
 
-    /* COL 3 */
-    const col3 = document.createElement("td");
-
     const remaining = isActive
       ? formatTime(state.timerEnd - now)
       : "--:--:--";
 
+    const col3 = document.createElement("td");
     col3.innerHTML = `
       <input type="checkbox"
         ${isActive ? "checked" : ""}
@@ -142,7 +212,6 @@ function render(data, stored, storageKey, showSelected=false) {
       <span class="timer-display">${remaining}</span>
     `;
 
-    /* COL 4 */
     const col4 = document.createElement("td");
     col4.innerHTML = `
       <button onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
