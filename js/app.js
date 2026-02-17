@@ -1,3 +1,19 @@
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("timersTable")) {
+    loadMissions();
+  }
+});
+
+function loadMissions() {
+
+  const params = new URLSearchParams(window.location.search);
+  const planet = params.get("planet");
+  const category = params.get("category");
+
+  if (!planet || !category) return;
+
+  const file = `data/timers_${planet}_${category}.json`;
+  const storageKey = `timers_${planet}_${category}`;
 
   fetch(file)
     .then(r => {
