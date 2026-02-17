@@ -1,95 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("dashboard")) {
-    loadDashboard();
-  }
-
   if (document.getElementById("timersTable")) {
     loadMissions();
   }
 });
 
-/* ===================================================== */
-/* ================= DASHBOARD ========================= */
-/* ===================================================== */
-
-function extractCategory(filename) {
-  const parts = filename.replace("timers_", "").replace(".json", "").split("_");
-  return {
-    planet: parts[0],
-    category: parts.slice(1).join("-")
-  };
-}
-
-function loadDashboard() {
-
-  Promise.all([
-    fetch("data/dashboard.json").then(r => r.json()),
-    fetch("data/files.json").then(r => r.json())
-  ])
-  .then(([planets, files]) => {
-
-    const container = document.getElementById("dashboard");
-
-    planets.forEach(planet => {
-
-      const card = document.createElement("div");
-      card.className = "planet-card card";
-
-      let totalActivePlanet = 0;
-
-      const header = document.createElement("div");
-      header.className = "planet-header";
-
-      const title = document.createElement("div");
-      title.className = "planet-title";
-      title.innerHTML = `${planet.icon} ${planet.title}`;
-
-      const catContainer = document.createElement("div");
-
-      files.forEach(file => {
-        const info = extractCategory(file);
-
-        if (info.planet === planet.planet) {
-
-          const storageKey = `timers_${info.planet}_${info.category}`;
-          const stored = JSON.parse(localStorage.getItem(storageKey)) || {};
-
-          const activeCount = Object.values(stored)
-            .filter(t => t.isActive).length;
-
-          totalActivePlanet += activeCount;
-
-          const btn = document.createElement("a");
-          btn.className = "category-button";
-          btn.href = `missions.html?planet=${info.planet}&category=${info.category}`;
-
-          btn.innerHTML = `
-            <span>${info.category}</span>
-            ${activeCount > 0 ? `<span class="badge">${activeCount}</span>` : ""}
-          `;
-
-          catContainer.appendChild(btn);
-        }
-      });
-
-      if (totalActivePlanet > 0) {
-        const counter = document.createElement("div");
-        counter.className = "planet-counter";
-        counter.textContent = totalActivePlanet;
-        header.appendChild(counter);
-      }
-
-      header.prepend(title);
-      card.appendChild(header);
-      card.appendChild(catContainer);
-      container.appendChild(card);
-    });
-  });
-}
-
-/* ===================================================== */
-/* ================= MISSIONS ========================== */
-/* ===================================================== */
+/* ================= LOAD ================= */
 
 function loadMissions() {
 
@@ -101,190 +16,180 @@ function loadMissions() {
 
   const file = `data/timers_${planet}_${category}.json`;
   const storageKey = `timers_${planet}_${category}`;
+  const topbarKey = `${storageKey}_showSelected`;
 
   fetch(file)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Fichier introuvable : " + file);
-      }
-      return response.json();
-    })
+    .then(r => r.json())
     .then(data => {
 
-      // TRI ALPHABÉTIQUE
       data.sort((a,b)=>
         a.name.localeCompare(b.name,'fr',{sensitivity:'base'})
       );
 
       let stored = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-      // INITIALISATION PROPRE
-      data.forEach(mission => {
-
-        if (!stored[mission.id]) {
-          stored[mission.id] = {
-            isActive: false,
-            selected: false,
-            count: 0
+      data.forEach(m => {
+        if (!stored[m.id]) {
+          stored[m.id] = {
+            selected:false,
+            timerEnd:null
           };
-        }
-
-        if (stored[mission.id].count === undefined) {
-          stored[mission.id].count = 0;
         }
       });
 
       localStorage.setItem(storageKey, JSON.stringify(stored));
 
-      renderMissions(data, stored, storageKey);
+      // restore topbar checkbox
+      const showSelectedOnly = document.getElementById("showSelectedOnly");
+      const savedTopbar = localStorage.getItem(topbarKey);
+      if (savedTopbar === "true") showSelectedOnly.checked = true;
 
-      document.getElementById("showSelectedOnly")
-        .addEventListener("change", e => {
-          renderMissions(data, stored, storageKey, e.target.checked);
-        });
-    })
-    .catch(error => console.error(error));
+      showSelectedOnly.addEventListener("change", e => {
+        localStorage.setItem(topbarKey, e.target.checked);
+        render(data, stored, storageKey, e.target.checked);
+      });
+
+      render(data, stored, storageKey, showSelectedOnly.checked);
+
+      setInterval(() => {
+        render(data, stored, storageKey, showSelectedOnly.checked);
+      }, 1000);
+
+    });
 }
 
-function renderMissions(data, stored, storageKey, showSelected=false) {
+/* ================= RENDER ================= */
 
-  const tableBody = document.getElementById("timersTable");
-  tableBody.innerHTML = "";
+function render(data, stored, storageKey, showSelected=false) {
+
+  const table = document.getElementById("timersTable");
+  table.innerHTML = "";
 
   let selectedCount = 0;
 
-  const activeMissions = [];
-  const inactiveMissions = [];
+  const active = [];
+  const inactive = [];
 
-  data.forEach(mission => {
+  const now = Date.now();
 
-    const state = stored[mission.id];
+  data.forEach(m => {
+
+    const state = stored[m.id];
 
     if (showSelected && !state.selected) return;
 
     if (state.selected) selectedCount++;
 
-    if (state.isActive)
-      activeMissions.push(mission);
+    if (state.timerEnd && state.timerEnd > now)
+      active.push(m);
     else
-      inactiveMissions.push(mission);
+      inactive.push(m);
   });
 
-  function createSectionRow(title) {
+  function section(title) {
     const row = document.createElement("tr");
     row.className = "section-header";
-
     const cell = document.createElement("td");
     cell.colSpan = 4;
     cell.textContent = title;
-
     row.appendChild(cell);
     return row;
   }
 
-  function createMissionRow(mission) {
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms/1000);
+    const h = Math.floor(totalSec/3600);
+    const m = Math.floor((totalSec%3600)/60);
+    const s = totalSec%60;
+    return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  }
 
-    const state = stored[mission.id];
+  function rowMission(m) {
+
+    const state = stored[m.id];
     const row = document.createElement("tr");
 
-    if (state.isActive) row.classList.add("active-row");
+    const now = Date.now();
+    const isActive = state.timerEnd && state.timerEnd > now;
 
-    // COL 1 - Sélection
-    const selCell = document.createElement("td");
-    selCell.innerHTML = `
+    /* COL 1 */
+    const col1 = document.createElement("td");
+    col1.style.width = "45px";
+    col1.innerHTML = `
       <input type="checkbox" ${state.selected ? "checked" : ""}
-        onchange="toggleSelect('${mission.id}','${storageKey}')">
+        onchange="toggleSelect('${m.id}','${storageKey}')">
     `;
 
-    // COL 2 - Nom
-    const nameCell = document.createElement("td");
-    nameCell.style.textAlign = "left";
-
-    if (mission.info) {
-      nameCell.innerHTML = `
-        <span class="name-wrapper">
-          ${mission.name}
-          <span class="info-icon">
-            ℹ
-            <span class="info-tooltip">${mission.info}</span>
-          </span>
-        </span>
-      `;
-    } else {
-      nameCell.textContent = mission.name;
-    }
-
-    // COL 3 - Actif / compteur
-    const controlCell = document.createElement("td");
-    controlCell.className = "control-cell";
-
-    controlCell.innerHTML = `
-      <div class="control-wrapper">
-        <button onclick="toggleActive('${mission.id}','${storageKey}')">
-          ${state.isActive ? "Stop" : "Start"}
-        </button>
-        <button onclick="incrementCounter('${mission.id}','${storageKey}')">+</button>
-        <span class="counter">${state.count ?? 0}</span>
-      </div>
+    /* COL 2 */
+    const col2 = document.createElement("td");
+    col2.style.textAlign = "left";
+    col2.innerHTML = `
+      ${m.name}
+      ${isActive ? `<span class="badge-active">Actif</span>` : ""}
     `;
 
-    // COL 4 - WP
-    const wpCell = document.createElement("td");
-    if (mission.wp) {
-      wpCell.innerHTML = `
-        <button onclick="navigator.clipboard.writeText('${mission.wp}')">
-          Copier
-        </button>
-      `;
-    }
+    /* COL 3 */
+    const col3 = document.createElement("td");
 
-    row.appendChild(selCell);
-    row.appendChild(nameCell);
-    row.appendChild(controlCell);
-    row.appendChild(wpCell);
+    const remaining = isActive
+      ? formatTime(state.timerEnd - now)
+      : "--:--:--";
+
+    col3.innerHTML = `
+      <input type="checkbox"
+        ${isActive ? "checked" : ""}
+        onchange="toggleTimer('${m.id}',${m.durationHours},'${storageKey}')">
+      <span class="timer-display">${remaining}</span>
+    `;
+
+    /* COL 4 */
+    const col4 = document.createElement("td");
+    col4.innerHTML = `
+      <button onclick="navigator.clipboard.writeText(\`${m.coords}\`)">
+        Copier
+      </button>
+    `;
+
+    row.appendChild(col1);
+    row.appendChild(col2);
+    row.appendChild(col3);
+    row.appendChild(col4);
 
     return row;
   }
 
-  if (activeMissions.length > 0) {
-    tableBody.appendChild(createSectionRow("🔥 Timers actifs"));
-    activeMissions.forEach(m =>
-      tableBody.appendChild(createMissionRow(m))
-    );
+  if (active.length) {
+    table.appendChild(section("🔥 Timers actifs"));
+    active.forEach(m => table.appendChild(rowMission(m)));
   }
 
-  if (inactiveMissions.length > 0) {
-    tableBody.appendChild(createSectionRow("⏳ Timers inactifs"));
-    inactiveMissions.forEach(m =>
-      tableBody.appendChild(createMissionRow(m))
-    );
+  if (inactive.length) {
+    table.appendChild(section("⏳ Timers inactifs"));
+    inactive.forEach(m => table.appendChild(rowMission(m)));
   }
 
   document.getElementById("counter").textContent =
     `${selectedCount} / ${data.length}`;
 }
 
-/* ===================================================== */
-/* ================= ACTIONS =========================== */
-/* ===================================================== */
+/* ================= ACTIONS ================= */
 
 function toggleSelect(id, storageKey) {
   const stored = JSON.parse(localStorage.getItem(storageKey));
   stored[id].selected = !stored[id].selected;
   localStorage.setItem(storageKey, JSON.stringify(stored));
-  location.reload();
 }
 
-function toggleActive(id, storageKey) {
-  const stored = JSON.parse(localStorage.getItem(storageKey));
-  stored[id].isActive = !stored[id].isActive;
-  localStorage.setItem(storageKey, JSON.stringify(stored));
-  location.reload();
-}
+function toggleTimer(id, durationHours, storageKey) {
 
-function incrementCounter(id, storageKey) {
   const stored = JSON.parse(localStorage.getItem(storageKey));
-  stored[id].count++;
+  const now = Date.now();
+
+  if (stored[id].timerEnd && stored[id].timerEnd > now) {
+    stored[id].timerEnd = null;
+  } else {
+    stored[id].timerEnd = now + (durationHours * 3600 * 1000);
+  }
+
   localStorage.setItem(storageKey, JSON.stringify(stored));
-  location.reload();
 }
