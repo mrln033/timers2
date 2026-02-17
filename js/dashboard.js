@@ -55,7 +55,7 @@ async function loadDashboard() {
           `missions.html?planet=${planet.planet}&category=${category}`;
 
         btn.innerHTML = `
-          ${category}
+          ${category.charAt(0).toUpperCase() + category.slice(1)}
           ${activeCount
             ? `<span class="badge-active">${activeCount}</span>`
             : ""}

@@ -113,7 +113,7 @@ th {
 }
 
 /* ============================= */
-/* ===== DASHBOARD STYLE ======= */
+/* ===== DASHBOARD PAGE ======= */
 /* ============================= */
 
 .dashboard-title {
@@ -128,42 +128,35 @@ th {
   justify-content: center;
 }
 
+/* Tuile planète */
 .planet-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
   width: 280px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
 }
 
-.planet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
+.planet-card:hover {
+  transform: translateY(-4px);
 }
 
+/* Nom planète centré */
 .planet-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 18px;
+  text-align: center;
+  font-size: 20px;
   font-weight: 600;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
 }
 
-.planet-counter {
-  font-size: 13px;
-  background: #4caf50;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-/* ============================= */
-/* ===== CATEGORY BUTTONS ====== */
-/* ============================= */
-
+/* Boutons catégories */
 .category-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
   padding: 10px 14px;
   margin-bottom: 10px;
   border-radius: 8px;
@@ -171,7 +164,7 @@ th {
   font-weight: 500;
   background: linear-gradient(135deg, #2196f3, #42a5f5);
   color: white;
-  transition: 0.2s;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
@@ -180,10 +173,12 @@ th {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.category-button .badge {
-  background: #ff3b3b;
-  border-radius: 999px;
+/* Badge actif */
+.badge-active {
+  background-color: #4caf50;
+  color: white;
   padding: 2px 8px;
+  border-radius: 12px;
   font-size: 12px;
 }
 
