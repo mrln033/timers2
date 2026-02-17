@@ -273,6 +273,12 @@ body {
 
 .badges {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   margin-left: auto;
 }
+
+.badge-active,
+.badge-selected {
+  margin-left: 0;
+}
+
