@@ -180,7 +180,7 @@ body {
 /* Timer */
 .timers-table th:nth-child(3),
 .timers-table td:nth-child(3) {
-  width: 80px;
+  width: 100px;
   text-align: center;
   font-weight: 700;
   font-size: 15px;
