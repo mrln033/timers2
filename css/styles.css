@@ -257,3 +257,15 @@ body {
   background: linear-gradient(135deg, #4caf50, #66bb6a);
   box-shadow: 0 3px 8px rgba(76,175,80,0.4);
 }
+
+.category-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
