@@ -120,11 +120,11 @@ function loadMissions() {
 
 function renderMissions(data, stored, storageKey, showSelected=false) {
 
-  const activeContainer = document.getElementById("activeContainer");
-  const inactiveContainer = document.getElementById("inactiveContainer");
+  const activeTable = document.getElementById("activeTable");
+  const inactiveTable = document.getElementById("inactiveTable");
 
-  activeContainer.innerHTML = "";
-  inactiveContainer.innerHTML = "";
+  activeTable.innerHTML = "";
+  inactiveTable.innerHTML = "";
 
   let selectedCount = 0;
 
@@ -136,28 +136,74 @@ function renderMissions(data, stored, storageKey, showSelected=false) {
 
     if (state.selected) selectedCount++;
 
-    const div = document.createElement("div");
-    div.className = "mission";
+    const row = document.createElement("tr");
 
-    div.innerHTML = `
-      <span>${mission.name}</span>
-      <div>
-        <input type="checkbox" ${state.selected?"checked":""}
-          onchange="toggleSelect('${mission.id}','${storageKey}')">
+    if (state.isActive) row.classList.add("active-row");
+
+    // === COL 1 : Sélection ===
+    const selCell = document.createElement("td");
+    selCell.innerHTML = `
+      <input type="checkbox" ${state.selected ? "checked" : ""}
+        onchange="toggleSelect('${mission.id}','${storageKey}')">
+    `;
+
+    // === COL 2 : Nom mission + info ===
+    const nameCell = document.createElement("td");
+    nameCell.style.textAlign = "left";
+
+    if (mission.info) {
+      nameCell.innerHTML = `
+        <span class="name-wrapper">
+          ${mission.name}
+          <span class="info-icon">
+            ℹ
+            <span class="info-tooltip">${mission.info}</span>
+          </span>
+        </span>
+      `;
+    } else {
+      nameCell.textContent = mission.name;
+    }
+
+    // === COL 3 : Actif / Compteur ===
+    const controlCell = document.createElement("td");
+    controlCell.className = "control-cell";
+
+    controlCell.innerHTML = `
+      <div class="control-wrapper">
         <button onclick="toggleActive('${mission.id}','${storageKey}')">
-          ${state.isActive?"Stop":"Start"}
+          ${state.isActive ? "Stop" : "Start"}
         </button>
+        <span class="counter">
+          ${state.count || 0}
+        </span>
       </div>
     `;
 
+    // === COL 4 : WP ===
+    const wpCell = document.createElement("td");
+
+    if (mission.wp) {
+      wpCell.innerHTML = `
+        <button onclick="navigator.clipboard.writeText('${mission.wp}')">
+          Copier
+        </button>
+      `;
+    }
+
+    row.appendChild(selCell);
+    row.appendChild(nameCell);
+    row.appendChild(controlCell);
+    row.appendChild(wpCell);
+
     if (state.isActive)
-      activeContainer.appendChild(div);
+      activeTable.appendChild(row);
     else
-      inactiveContainer.appendChild(div);
+      inactiveTable.appendChild(row);
   });
 
   document.getElementById("counter").textContent =
-    `${selectedCount} / ${data.length} sélectionnés`;
+    `${selectedCount} / ${data.length}`;
 }
 
 function toggleSelect(id, storageKey) {
