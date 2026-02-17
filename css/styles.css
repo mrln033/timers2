@@ -273,7 +273,7 @@ body {
 
 .badges {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   margin-left: auto;
 }
 
