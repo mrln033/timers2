@@ -244,12 +244,6 @@ th {
   text-align: center;
 }
 
-.timers-table td:first-child {
-  width: 45px;
-  max-width: 45px;
-  min-width: 45px;
-  text-align: center;
-}
 
 /* Section Actifs / Inactifs */
 .section-header td {
@@ -260,33 +254,12 @@ th {
   font-size: 15px;
 }
 
-.timers-table th:nth-child(2),
-.timers-table td:nth-child(2) {
-  width: auto;
-}
-
-/* Colonne Timer */
-.timers-table th:nth-child(3),
-.timers-table td:nth-child(3) {
-  width: 80px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 15px;
-}
-
 .timer-display {
   display: inline-block;
   font-family: monospace;
   font-weight: 700;
   font-size: 15px;
   margin-left: 6px;
-}
-
-/* Colonne Coords */
-.timers-table th:nth-child(4),
-.timers-table td:nth-child(4) {
-  width: 10px;
-  text-align: center;
 }
 
 /* Bouton Copier */
@@ -308,3 +281,37 @@ th {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
+
+/* Colonne 1 */
+.timers-table th:nth-child(1),
+.timers-table td:nth-child(1) {
+  width: 60px;
+  text-align: center;
+}
+
+/* Colonne 2 (dynamique) */
+.timers-table th:nth-child(2),
+.timers-table td:nth-child(2) {
+  width: auto;
+}
+
+/* Colonne 3 (timer) */
+.timers-table th:nth-child(3),
+.timers-table td:nth-child(3) {
+  width: 80px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* Colonne 4 (copier WP) */
+.timers-table th:nth-child(4),
+.timers-table td:nth-child(4) {
+  width: 110px;
+  text-align: center;
+}
+
+.timers-table td:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
