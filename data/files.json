@@ -12,6 +12,9 @@
   "timers_monria_hunting.json",
   "timers_monria_crafting.json",
   "timers_next-island_hunting.json",
+  "timers_next-island_crafting.json",
+  "timers_next-island_scouting.json",
+  "timers_next-island_autres.json",
   "timers_next-island_turn-in.json",
   "timers_aris_test.json"
 ]

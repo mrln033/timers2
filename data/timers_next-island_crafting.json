@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ni_c_1",
+    "name": "Crafting my future (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Ancient Greece, 36717, 17324, 101, Aegeus]"
+  },
+  {
+    "id": "ni_c_2",
+    "name": "Daily Clothes Fashionista (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 135900, 83371, 109, Aria Sachs]"
+  },
+  {
+    "id": "ni_c_3",
+    "name": "Daily Crystalline Core Challenge (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 133351, 94010, 120, Nathan]"
+  },
+  {
+    "id": "ni_c_4",
+    "name": "Daily Lesser Elysia Challenge (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 135359, 88603, 446, May]"
+  }
+]

@@ -3,12 +3,71 @@
     "id": "ni_h_1",
     "name": "Daily Achelous Hunt (20h)",
     "durationHours": 20,
-    "coords": "/wp [Next Island, 135223, 88545, 448, Hunting specialist]"
+    "coords": "/wp [Next Island, 135223, 88545, 448, Hunting specialist]",
+	"info": "Requis : Haruspex VIP"
   },
   {
     "id": "ni_h_2",
     "name": "Daily Asterion Hunt (20h)",
     "durationHours": 20,
-    "coords": "/wp [Next Island, 135223, 88545, 448, Hunting specialist]"
+    "coords": "/wp [Next Island, 135223, 88545, 448, Hunting specialist]",
+	"info": "Requis : Haruspex VIP"
+  },
+  {
+    "id": "ni_h_3",
+    "name": "Daily Brown Papoo Hunting (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 136556, 84255, 249, Winda]",
+	"info": "Requis : Loyalist VIP"
+  },
+  {
+    "id": "ni_h_4",
+    "name": "Daily Color Mania (Salvador) (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132162, 84805, 130, Yell]"
+  },
+  {
+    "id": "ni_h_5",
+    "name": "Daily Color Mania (Pablo) (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132162, 84805, 130, Yell]"
+  },
+  {
+    "id": "ni_h_6",
+    "name": "Daily Color Mania (Frida) (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132162, 84805, 130, Yell]"
+  },
+  {
+    "id": "ni_h_7",
+    "name": "Daily Color Mania (Leonardo) (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 132162, 84805, 130, Yell]"
+  },
+  {
+    "id": "ni_h_8",
+    "name": "Daily Crystal Hoarder Mission (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 126305, 89439, 156, Hiresh]"
+  },
+  {
+    "id": "ni_h_9",
+    "name": "Drake Eradication Daily (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 133387, 94085, 120, Overseer Alice]"
+  },
+  {
+    "id": "ni_h_10",
+    "name": "Daily Drake Hunt for Crystalline Core Mats (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 133432, 93991, 758, mission broker]",
+	"info": "Requis : N.E.O. VIP"
+  },
+  {
+    "id": "ni_h_11",
+    "name": "Daily Grey Papoo (20h)",
+    "durationHours": 20,
+    "coords": "/wp [Next Island, 135268, 88548, 447, Pierre]",
+	"info": "Requis : Haruspex VIP"
   }
 ]
