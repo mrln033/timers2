@@ -64,17 +64,15 @@ let planetFiles = files
           `missions.html?planet=${planet.planet}&category=${category}`;
 
 btn.innerHTML = `
-  ${category.charAt(0).toUpperCase() + category.slice(1)}
-  ${activeCount ? `<span class="badge-active">${activeCount}</span>` : ""}
-  ${selectedCount ? `<span class="badge-selected">${selectedCount}</span>` : ""}
+  <span class="badge-left">
+    ${activeCount ? `<span class="badge-active">${activeCount}</span>` : ""}
+  </span>
+
+  <span class="category-name">
+    ${category.charAt(0).toUpperCase() + category.slice(1)}
+  </span>
+
+  <span class="badge-right">
+    ${selectedCount ? `<span class="badge-selected">${selectedCount}</span>` : ""}
+  </span>
 `;
-        card.appendChild(btn);
-      });
-
-      container.appendChild(card);
-    });
-
-  } catch (err) {
-    console.error("Erreur dashboard :", err);
-  }
-}
