@@ -76,3 +76,13 @@ btn.innerHTML = `
     ${selectedCount ? `<span class="badge-selected">${selectedCount}</span>` : ""}
   </span>
 `;
+        card.appendChild(btn);
+      });
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("Erreur dashboard :", err);
+  }
+}
