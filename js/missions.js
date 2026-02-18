@@ -182,20 +182,30 @@ if (isActive) {
 
 col2.appendChild(wrapper);
 
-    /* COL 3 */
-    const remaining = isActive
-      ? formatTime(state.endTime - now)
-      : "--:--:--";
+/* COL 3 */
+const col3 = document.createElement("td");
 
-    const col3 = document.createElement("td");
-    col3.innerHTML = `
-      <input type="checkbox"
-        ${isActive ? "checked" : ""}
-        onchange="handleTimerToggle('${storageKey}','${m.id}',${m.durationHours})">
-      <span class="timer-display" data-timer="${m.id}">
-        ${remaining}
-      </span>
-    `;
+// 🚨 Si durationHours absent, vide ou 0
+if (!m.durationHours || Number(m.durationHours) === 0) {
+
+  col3.className = "missing-info";
+  col3.textContent = "Info manquante";
+
+} else {
+
+  const remaining = isActive
+    ? formatTime(state.endTime - now)
+    : "--:--:--";
+
+  col3.innerHTML = `
+    <input type="checkbox"
+      ${isActive ? "checked" : ""}
+      onchange="handleTimerToggle('${storageKey}','${m.id}',${m.durationHours})">
+    <span class="timer-display" data-timer="${m.id}">
+      ${remaining}
+    </span>
+  `;
+}
 
     /* COL 4 */
     const col4 = document.createElement("td");
