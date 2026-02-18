@@ -1,7 +1,9 @@
 [
   { "planet": "calypso", "title": "Calypso", "icon": "🌍" },
-  { "planet": "cyrene", "title": "Cyrene", "icon": "🪐" },
-  { "planet": "monria", "title": "Monria", "icon": "🌑" },
-  { "planet": "next-island", "title": "Next Island", "icon": "🏝️" },
-  { "planet": "aris", "title": "Aris", "icon": "🚀" }
+  { "planet": "cyrene", "title": "Cyrene", "icon": "🌍" },
+  { "planet": "monria", "title": "Monria / DSEC-9", "icon": "🌕" },
+  { "planet": "next-island", "title": "Next Island", "icon": "🌍️" },
+  { "planet": "toulan", "title": "Toulan", "icon": "🌍️" },
+  { "planet": "howling-mine", "title": "Howling Mine", "icon": "🪨" },
+  { "planet": "aris", "title": "Aris", "icon": "🌙" }
 ]
