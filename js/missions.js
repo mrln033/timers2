@@ -249,20 +249,50 @@ function refreshView(storageKey) {
 
 function handleCopy(button, text) {
 
-  navigator.clipboard.writeText(text).then(() => {
+  async function copyText() {
+
+    // API moderne
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {}
+    }
+
+    // Fallback compatible iframe
+    try {
+      const tempInput = document.createElement("textarea");
+      tempInput.value = text;
+      tempInput.style.position = "fixed";
+      tempInput.style.opacity = "0";
+      document.body.appendChild(tempInput);
+      tempInput.focus();
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      return true;
+    } catch {}
+
+    return false;
+  }
+
+  copyText().then(success => {
 
     const originalText = button.textContent;
 
-    button.textContent = "Copié !";
-    button.classList.add("copied");
+    if (success) {
+      button.textContent = "Copié !";
+      button.classList.add("copied");
+    } else {
+      button.textContent = "Erreur";
+    }
 
     setTimeout(() => {
       button.textContent = originalText;
       button.classList.remove("copied");
     }, 1200);
 
-  }).catch(() => {
-    button.textContent = "Erreur";
   });
 
 }
+
