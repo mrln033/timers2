@@ -39,6 +39,17 @@ let planetFiles = files
     return catA.localeCompare(catB, "fr", { sensitivity: "base" });
   })
   
+// 🚧 Si aucune catégorie pour cette planète
+if (planetFiles.length === 0) {
+  const soon = document.createElement("div");
+  soon.className = "coming-soon";
+  soon.textContent = "(🚧 bientôt)";
+  card.appendChild(soon);
+
+  container.appendChild(card);
+  return; // important : on saute la création des boutons
+}
+  
       let totalActivePlanet = 0;
 
       planetFiles.forEach(file => {
