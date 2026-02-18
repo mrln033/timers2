@@ -12,6 +12,13 @@ function initMissionStorage(storageKey, missions) {
 
   let stored = getStorage(storageKey);
 
+  // Initialiser _settings si absent
+  if (!stored._settings) {
+    stored._settings = {
+      showSelected: false
+    };
+  }
+
   missions.forEach(m => {
     if (!stored[m.id]) {
       stored[m.id] = {
@@ -23,6 +30,18 @@ function initMissionStorage(storageKey, missions) {
 
   setStorage(storageKey, stored);
   return stored;
+}
+
+function getShowSelected(storageKey) {
+  const stored = getStorage(storageKey);
+  return stored._settings?.showSelected || false;
+}
+
+function setShowSelected(storageKey, value) {
+  const stored = getStorage(storageKey);
+  if (!stored._settings) stored._settings = {};
+  stored._settings.showSelected = value;
+  setStorage(storageKey, stored);
 }
 
 function toggleSelected(storageKey, id) {
@@ -49,14 +68,20 @@ function countActiveTimers(storageKey) {
   const stored = getStorage(storageKey);
   const now = Date.now();
 
-  return Object.values(stored)
-    .filter(m => m.endTime && m.endTime > now).length;
+  return Object.entries(stored)
+    .filter(([key]) => key !== "_settings")
+    .map(([, m]) => m)
+    .filter(m => m.endTime && m.endTime > now)
+    .length;
 }
 
 function countSelectedTimers(storageKey) {
   const stored = getStorage(storageKey);
 
-  return Object.values(stored)
-    .filter(m => m.selected === true).length;
+  return Object.entries(stored)
+    .filter(([key]) => key !== "_settings")
+    .map(([, m]) => m)
+    .filter(m => m.selected === true)
+    .length;
 }
 

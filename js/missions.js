@@ -39,7 +39,6 @@ if (pageTitle) {
   if (!planet || !category) return;
 
   const storageKey = `timers_${planet}_${category}`;
-  const topbarKey = `${storageKey}_showSelected`;
   const file = `data/timers_${planet}_${category}.json`;
 
   fetch(file)
@@ -51,12 +50,12 @@ if (pageTitle) {
       const stored = initMissionStorage(storageKey, data);
 
       const showSelectedOnly = document.getElementById("showSelectedOnly");
-      showSelectedOnly.checked = localStorage.getItem(topbarKey) === "true";
+showSelectedOnly.checked = getShowSelected(storageKey);
 
-      showSelectedOnly.addEventListener("change", e => {
-        localStorage.setItem(topbarKey, e.target.checked);
-        render(data, storageKey, e.target.checked);
-      });
+showSelectedOnly.addEventListener("change", e => {
+  setShowSelected(storageKey, e.target.checked);
+  render(data, storageKey, e.target.checked);
+});
 
       render(data, storageKey, showSelectedOnly.checked);
 
@@ -278,8 +277,7 @@ function handleTimerToggle(storageKey, id, durationHours) {
 
 function refreshView(storageKey) {
 
-  const showSelected =
-    document.getElementById("showSelectedOnly")?.checked || false;
+  cconst showSelected = getShowSelected(storageKey);
 
   render(missionsData, storageKey, showSelected);
 }
