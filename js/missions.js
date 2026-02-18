@@ -277,7 +277,7 @@ function handleTimerToggle(storageKey, id, durationHours) {
 
 function refreshView(storageKey) {
 
-  cconst showSelected = getShowSelected(storageKey);
+  const showSelected = getShowSelected(storageKey);
 
   render(missionsData, storageKey, showSelected);
 }
