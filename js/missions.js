@@ -86,7 +86,7 @@ function render(data, storageKey, showSelected=false) {
   data.forEach(m => {
 
     const state = stored[m.id];
-    const isActive = state.timerEnd && state.timerEnd > now;
+    const isActive = state.endTime && state.endTime > now;
 
     if (state.selected) selectedCount++;
 
@@ -134,7 +134,7 @@ function render(data, storageKey, showSelected=false) {
   function rowMission(m) {
 
     const state = stored[m.id];
-    const isActive = state.timerEnd && state.timerEnd > now;
+    const isActive = state.endTime && state.endTime > now;
 
     const row = document.createElement("tr");
 
@@ -157,7 +157,7 @@ function render(data, storageKey, showSelected=false) {
 
     /* COL 3 */
     const remaining = isActive
-      ? formatTime(state.timerEnd - now)
+      ? formatTime(state.endTime - now)
       : "--:--:--";
 
     const col3 = document.createElement("td");
@@ -211,11 +211,11 @@ function updateTimers(storageKey) {
 
     const state = stored[id];
 
-    if (state.timerEnd && state.timerEnd > now) {
+    if (state.endTime && state.endTime > now) {
 
       const el = document.querySelector(`[data-timer="${id}"]`);
       if (el) {
-        el.textContent = formatTime(state.timerEnd - now);
+        el.textContent = formatTime(state.endTime - now);
       }
 
     }

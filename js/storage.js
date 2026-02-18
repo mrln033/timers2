@@ -16,7 +16,7 @@ function initMissionStorage(storageKey, missions) {
     if (!stored[m.id]) {
       stored[m.id] = {
         selected: false,
-        timerEnd: null
+        endTime: null
       };
     }
   });
@@ -36,10 +36,10 @@ function toggleTimerState(storageKey, id, durationHours) {
   const stored = getStorage(storageKey);
   const now = Date.now();
 
-  if (stored[id].timerEnd && stored[id].timerEnd > now) {
-    stored[id].timerEnd = null;
+  if (stored[id].endTime && stored[id].endTime > now) {
+    stored[id].endTime = null;
   } else {
-    stored[id].timerEnd = now + (durationHours * 3600 * 1000);
+    stored[id].endTime = now + (durationHours * 3600 * 1000);
   }
 
   setStorage(storageKey, stored);
@@ -50,7 +50,7 @@ function countActiveTimers(storageKey) {
   const now = Date.now();
 
   return Object.values(stored)
-    .filter(m => m.timerEnd && m.timerEnd > now).length;
+    .filter(m => m.endTime && m.endTime > now).length;
 }
 
 function countSelectedTimers(storageKey) {
