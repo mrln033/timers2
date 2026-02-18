@@ -148,12 +148,39 @@ function render(data, storageKey, showSelected=false) {
     `;
 
     /* COL 2 */
-    const col2 = document.createElement("td");
-    col2.style.textAlign = "left";
-    col2.innerHTML = `
-      ${m.name}
-      ${isActive ? `<span class="badge-active">Actif</span>` : ""}
-    `;
+const col2 = document.createElement("td");
+col2.style.textAlign = "left";
+
+const wrapper = document.createElement("div");
+wrapper.className = "name-wrapper";
+
+const nameText = document.createElement("span");
+nameText.textContent = m.name;
+wrapper.appendChild(nameText);
+
+// 🛈 Info tooltip si présent
+if (m.info) {
+  const infoIcon = document.createElement("span");
+  infoIcon.className = "info-icon";
+  infoIcon.textContent = " 🛈";
+
+  const tooltip = document.createElement("span");
+  tooltip.className = "info-tooltip";
+  tooltip.textContent = m.info;
+
+  infoIcon.appendChild(tooltip);
+  wrapper.appendChild(infoIcon);
+}
+
+// Badge actif
+if (isActive) {
+  const badge = document.createElement("span");
+  badge.className = "badge-active";
+  badge.textContent = "Actif";
+  wrapper.appendChild(badge);
+}
+
+col2.appendChild(wrapper);
 
     /* COL 3 */
     const remaining = isActive
