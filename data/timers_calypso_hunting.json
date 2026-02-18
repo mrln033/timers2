@@ -11,6 +11,7 @@
     "name": "Daily Hunting Challenge 2 (21h - à la prise)",
     "durationHours": 21,
     "coords": "/wp [Calypso, 61774, 88019, 236, Daily Mission Terminal]",
+	"info": "Plusieurs 'Daily Mission Terminal' identiques existent dans le jeu."
   },
   {
     "id": "cal_h_3",
@@ -20,3 +21,4 @@
 	"info": "Plusieurs 'Daily Mission Terminal' identiques existent dans le jeu."
   }
 ]
+
